@@ -1,3 +1,4 @@
+import Header from "./components/Header";
 import NotificationButton from "./components/NotificationButton";
 
 function App() {
@@ -5,9 +6,7 @@ function App() {
   // Quando tiver mais que 1 tag, colocar todos dentro do Pai <> </>.
   return (
     <>
-      <h1>Hello, World!</h1>
-      <NotificationButton />
-      <NotificationButton />
+      <Header />
     </>
   );
 }
