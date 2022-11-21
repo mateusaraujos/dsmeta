@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NotificationButton from "../NotificationButton";
@@ -12,6 +13,14 @@ function SalesCard() {
   const [minDate, setMinDate] = useState(min);
   // Estado para a data máxima.
   const [maxDate, setMaxDate] = useState(new Date());
+
+  // Fazer uma requisição no Back-end que está rodando no Heroku.
+  useEffect(() => {
+    axios.get("https://dsmeta-mateusaraujo.herokuapp.com/sales")
+      .then(response => {
+        console.log(response.data);
+      });
+  }, []);
 
   return (
     <div className="dsmeta-card">
