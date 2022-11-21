@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Sale } from "../../models/sale";
+import { BASE_URL } from "../../utils/request";
 import NotificationButton from "../NotificationButton";
 import "./styles.css";
 
@@ -14,12 +16,13 @@ function SalesCard() {
   // Estado para a data máxima.
   const [maxDate, setMaxDate] = useState(new Date());
 
+  const [sales, setSales] = useState<Sale[]>([]); // Tipagem
+
   // Fazer uma requisição no Back-end que está rodando no Heroku.
   useEffect(() => {
-    axios.get("https://dsmeta-mateusaraujo.herokuapp.com/sales")
-      .then(response => {
-        console.log(response.data);
-      });
+    axios.get(`${BASE_URL}/sales`).then((response) => {
+      setSales(response.data.content);
+    });
   }, []);
 
   return (
@@ -60,45 +63,27 @@ function SalesCard() {
           </thead>
 
           <tbody>
-            <tr>
-              <td className="web992">#123</td>
-              <td className="web576">08/04/2022</td>
-              <td>Mateus</td>
-              <td className="web992">15</td>
-              <td className="web992">11</td>
-              <td>R$ 55444.00</td>
-              <td>
-                <div className="dsmeta-btn-container">
-                  <NotificationButton />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td className="web992">#123</td>
-              <td className="web576">08/04/2022</td>
-              <td>Mateus</td>
-              <td className="web992">15</td>
-              <td className="web992">11</td>
-              <td>R$ 55444.00</td>
-              <td>
-                <div className="dsmeta-btn-container">
-                  <NotificationButton />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td className="web992">#123</td>
-              <td className="web576">08/04/2022</td>
-              <td>Mateus</td>
-              <td className="web992">15</td>
-              <td className="web992">11</td>
-              <td>R$ 55444.00</td>
-              <td>
-                <div className="dsmeta-btn-container">
-                  <NotificationButton />
-                </div>
-              </td>
-            </tr>
+            {
+              // Percorre a lista de Sales e permite fazer operações em cada sale. lista.map()
+              sales.map((sale) => {
+                return (
+                  // Sempre tem que colocar um key em cada elemento.
+                  <tr key={sale.id}>
+                    <td className="web992">#{sale.id}</td>
+                    <td className="web576">{new Date(sale.date).toLocaleDateString()}</td>
+                    <td>{sale.sellerName}</td>
+                    <td className="web992">{sale.visited}</td>
+                    <td className="web992">{sale.deals}</td>
+                    <td>R$ {sale.amount.toFixed(2)}</td>
+                    <td>
+                      <div className="dsmeta-btn-container">
+                        <NotificationButton />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            }
           </tbody>
         </table>
       </div>
