@@ -20,10 +20,15 @@ function SalesCard() {
 
   // Fazer uma requisição no Back-end que está rodando no Heroku.
   useEffect(() => {
-    axios.get(`${BASE_URL}/sales`).then((response) => {
-      setSales(response.data.content);
-    });
-  }, []);
+    const minimumDate = minDate.toISOString().slice(0, 10); // 0 ao 10 yyyy-MM-dd
+    const maximumDate = maxDate.toISOString().slice(0, 10);
+
+    axios
+      .get(`${BASE_URL}/sales?minDate=${minimumDate}&maxDate=${maximumDate}`)
+      .then((response) => {
+        setSales(response.data.content);
+      });
+  }, [minDate, maxDate]); // useEffect roda de novo sempre que minDate ou maxDate mudar.
 
   return (
     <div className="dsmeta-card">
@@ -70,7 +75,9 @@ function SalesCard() {
                   // Sempre tem que colocar um key em cada elemento.
                   <tr key={sale.id}>
                     <td className="web992">#{sale.id}</td>
-                    <td className="web576">{new Date(sale.date).toLocaleDateString()}</td>
+                    <td className="web576">
+                      {new Date(sale.date).toLocaleDateString()}
+                    </td>
                     <td>{sale.sellerName}</td>
                     <td className="web992">{sale.visited}</td>
                     <td className="web992">{sale.deals}</td>
